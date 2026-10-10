@@ -1,0 +1,506 @@
+/* =============================================================
+   LILIUM GARDEN — Dreamy Botanical Bouquet
+   Personalized for Srujana Charis · Designed by Abie Aaron
+   ============================================================= */
+
+:root {
+    --theme-accent: #58a6ff;
+    --theme-glow: rgba(88, 166, 255, 0.4);
+    --theme-border: rgba(88, 166, 255, 0.25);
+    --theme-bg-tint: rgba(12, 22, 44, 0.7);
+
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-serif: 'Cinzel', serif;
+    --font-script: 'Playfair Display', Georgia, serif;
+
+    --glass-bg: rgba(10, 15, 26, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(225, 235, 255, 0.72);
+    --text-muted: rgba(200, 220, 255, 0.45);
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #020409;
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Main Container ---- */
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    user-select: none;
+}
+
+/* ---- Webcam Video (Mirrored Background) ---- */
+#webcam {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+    z-index: 1;
+    filter: brightness(0.88) contrast(1.05) saturate(1.1);
+}
+
+/* ---- Canvas Visuals Overlay ---- */
+#canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scaleX(-1);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* ---- Dreamy Soft Vignette ---- */
+.vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 40%,
+        rgba(3, 8, 20, 0.4) 75%,
+        rgba(2, 4, 12, 0.82) 100%
+    );
+}
+
+/* =============================================================
+   GLASSMORPHIC TOP HEADER & SPECIES SELECTOR
+   ============================================================= */
+.app-header {
+    position: absolute;
+    top: 24px;
+    left: 28px;
+    right: 28px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: auto;
+}
+
+/* Brand Identity */
+.brand {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-sub {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2.8px;
+    text-transform: uppercase;
+    color: var(--theme-accent);
+    transition: color 0.4s ease;
+    text-shadow: 0 0 12px var(--theme-glow);
+}
+
+.brand-title {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: 3.5px;
+    color: #ffffff;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8);
+}
+
+/* Species Switcher */
+.species-selector {
+    display: flex;
+    align-items: center;
+    background: rgba(10, 16, 28, 0.65);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid var(--theme-border);
+    border-radius: 30px;
+    padding: 4px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35), 0 0 16px var(--theme-glow);
+    transition: all 0.4s ease;
+}
+
+.species-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+    padding: 7px 15px;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.species-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blue-dot {
+    background: #4ba0ff;
+    box-shadow: 0 0 8px #4ba0ff;
+}
+
+.maroon-dot {
+    background: #e03b54;
+    box-shadow: 0 0 8px #e03b54;
+}
+
+.species-tab:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.species-tab.active {
+    color: #ffffff;
+    background: var(--theme-bg-tint);
+    border: 1px solid var(--theme-border);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 12px var(--theme-glow);
+}
+
+.species-tab.active .species-dot {
+    transform: scale(1.2);
+}
+
+/* Status Indicator Dot */
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(10, 16, 28, 0.55);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 7px 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
+.status-dot.searching {
+    background: #f59e0b;
+    box-shadow: 0 0 8px #f59e0b;
+    animation: status-pulse 1.8s ease-in-out infinite;
+}
+
+.status-dot.active,
+.status-dot.ready {
+    background: #34d399;
+    box-shadow: 0 0 8px #34d399;
+    animation: status-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes status-pulse {
+    0%, 100% { opacity: 0.6; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.15); }
+}
+
+.status-text {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.3px;
+}
+
+/* =============================================================
+   DREAMY INSTRUCTION PILL (Whisper Guide)
+   ============================================================= */
+.instructions-pill {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background: rgba(9, 14, 25, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--theme-border);
+    border-radius: 30px;
+    padding: 10px 24px;
+    box-shadow: 0 10px 36px rgba(0, 0, 0, 0.4), 0 0 18px var(--theme-glow);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.instructions-pill.collapsed {
+    opacity: 0.35;
+    transform: translateX(-50%) translateY(8px) scale(0.96);
+}
+
+.instructions-pill:hover {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1.02);
+}
+
+.instruction-content {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.instruction-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.gesture-badge {
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 2.5px 8px;
+    border-radius: 10px;
+    background: var(--theme-bg-tint);
+    border: 1px solid var(--theme-border);
+    color: var(--theme-accent);
+    letter-spacing: 0.2px;
+}
+
+.gesture-desc {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+.instruction-sep {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.2);
+}
+
+/* =============================================================
+   CREATOR SIGNATURE (Bottom-Right Minimalist Signature)
+   ============================================================= */
+.creator-signature {
+    position: absolute;
+    bottom: 26px;
+    right: 28px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(10, 16, 28, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 6px 14px;
+    opacity: 0.65;
+    transition: opacity 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+    pointer-events: auto;
+}
+
+.creator-signature:hover {
+    opacity: 0.95;
+    border-color: var(--theme-border);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 0 12px var(--theme-glow);
+}
+
+.signature-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--theme-accent);
+    box-shadow: 0 0 6px var(--theme-accent);
+}
+
+.signature-text {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.8px;
+    color: rgba(225, 235, 255, 0.85);
+}
+
+/* =============================================================
+   PERSONALIZED INTRO OVERLAY (Hiii, Srujana Charis)
+   ============================================================= */
+.loading-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at center, #091224 0%, #030611 60%, #010206 100%);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.9s ease;
+}
+
+.loading-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 480px;
+    padding: 32px 24px;
+}
+
+.lily-loader-flower {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-aura {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(75, 160, 255, 0.35) 0%, transparent 70%);
+    animation: aura-breathe 3s ease-in-out infinite;
+}
+
+.loader-ring {
+    position: absolute;
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    border: 1.5px dashed rgba(88, 166, 255, 0.6);
+    animation: loader-spin 10s linear infinite;
+    box-shadow: 0 0 24px var(--theme-glow);
+}
+
+.loader-center-sparkle {
+    width: 18px;
+    height: 18px;
+    background: #6ab4ff;
+    border-radius: 50%;
+    box-shadow: 0 0 20px #4ba0ff, 0 0 45px #ffffff;
+    animation: loader-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes loader-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes loader-pulse {
+    0%, 100% { transform: scale(0.88); opacity: 0.65; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+@keyframes aura-breathe {
+    0%, 100% { transform: scale(0.9); opacity: 0.4; }
+    50% { transform: scale(1.3); opacity: 0.8; }
+}
+
+.loading-greeting {
+    font-family: var(--font-script);
+    font-size: 28px;
+    font-weight: 500;
+    font-style: italic;
+    letter-spacing: 1px;
+    color: #ffffff;
+    margin-bottom: 10px;
+    text-shadow: 0 0 24px rgba(88, 166, 255, 0.6), 0 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+.loading-sub {
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(215, 230, 255, 0.8);
+    letter-spacing: 0.5px;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.loading-bar {
+    width: 200px;
+    height: 2.5px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.loading-bar-inner {
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(90deg, #388bfd, #8bc2ff);
+    box-shadow: 0 0 10px #4ba0ff;
+    border-radius: 3px;
+    animation: loading-slide 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes loading-slide {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(200%); }
+}
+
+.loading-hint {
+    font-size: 11px;
+    font-weight: 300;
+    color: rgba(200, 220, 255, 0.4);
+    letter-spacing: 0.3px;
+}
+
+/* =============================================================
+   RESPONSIVENESS
+   ============================================================= */
+@media (max-width: 768px) {
+    .app-header {
+        top: 16px;
+        left: 16px;
+        right: 16px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .instructions-pill {
+        bottom: 60px;
+        padding: 8px 16px;
+        max-width: 90%;
+    }
+
+    .creator-signature {
+        bottom: 18px;
+        right: 16px;
+    }
+
+    .loading-greeting {
+        font-size: 24px;
+    }
+}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dreamy interactive rare botanical lily garden controlled via webcam hand gestures">
+    <title>Lilium Garden — Srujana Charis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Background Webcam Feed (Mirrored) -->
+        <video id="webcam" autoplay playsinline muted></video>
+
+        <!-- Canvas Visuals Overlay (Mirrored) -->
+        <canvas id="canvas"></canvas>
+
+        <!-- Soft Cinematic Vignette -->
+        <div class="vignette"></div>
+
+        <!-- Glassmorphic Top Navigation & Header -->
+        <header class="app-header">
+            <div class="brand">
+                <span class="brand-sub">Botanical Living Bouquet</span>
+                <h1 class="brand-title">LILIUM RARA</h1>
+            </div>
+
+            <!-- Species Selector Switcher -->
+            <div class="species-selector" role="tablist" aria-label="Select Lily Specimen">
+                <button id="species-blue" class="species-tab active" data-species="blue" role="tab" aria-selected="true">
+                    <span class="species-dot blue-dot"></span>
+                    <span class="species-label">Sapphire Lily</span>
+                </button>
+                <button id="species-maroon" class="species-tab" data-species="maroon" role="tab" aria-selected="false">
+                    <span class="species-dot maroon-dot"></span>
+                    <span class="species-label">Velvet Maroon</span>
+                </button>
+            </div>
+
+            <!-- Subtle Status Dot -->
+            <div class="status-badge" id="status-badge" title="Gesture Tracking Status">
+                <span class="status-dot ready" id="status-dot"></span>
+                <span class="status-text" id="status-text">Garden Alive</span>
+            </div>
+        </header>
+
+        <!-- Dreamy Whispered Instruction Pill -->
+        <div class="instructions-pill" id="instructions" role="region" aria-label="Gentle Controls Guide">
+            <div class="instruction-content">
+                <div class="instruction-item">
+                    <span class="gesture-badge">Left Hand</span>
+                    <span class="gesture-desc">Pinch to Bloom</span>
+                </div>
+                <div class="instruction-sep">✦</div>
+                <div class="instruction-item">
+                    <span class="gesture-badge">Right Hand</span>
+                    <span class="gesture-desc">Pinch to Grow</span>
+                </div>
+                <div class="instruction-sep">✦</div>
+                <div class="instruction-item">
+                    <span class="gesture-badge">Motion</span>
+                    <span class="gesture-desc">Sway for Breeze</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subtle Creator Signature (Bottom Right) -->
+        <div class="creator-signature" aria-label="Creator Credit">
+            <span class="signature-dot"></span>
+            <span class="signature-text">designed by Abie Aaron</span>
+        </div>
+
+        <!-- Personalized Dreamy Loading & Greeting Overlay -->
+        <div class="loading-overlay" id="loading">
+            <div class="loading-content">
+                <div class="lily-loader-flower">
+                    <div class="loader-aura"></div>
+                    <div class="loader-ring"></div>
+                    <div class="loader-center-sparkle"></div>
+                </div>
+                <h2 class="loading-greeting">Hiii, Srujana Charis</h2>
+                <p class="loading-sub">a celestial lily garden blooming just for you</p>
+                <div class="loading-bar">
+                    <div class="loading-bar-inner"></div>
+                </div>
+                <span class="loading-hint">initializing gesture tracking · please allow camera access</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MediaPipe Hands & Camera Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+
+    <!-- Modular Botanical Application Scripts -->
+    <script src="js/noise.js"></script>
+    <script src="js/species.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/gesture.js"></script>
+    <script src="js/lily.js"></script>
+    <script src="js/celebration.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
