@@ -11,7 +11,6 @@ class UIManager {
 
         // DOM elements
         this.root = document.documentElement;
-        this.loadingOverlay = document.getElementById('loading');
         this.instructionsPill = document.getElementById('instructions');
         this.statusBadge = document.getElementById('status-badge');
         this.statusDot = document.getElementById('status-dot');
@@ -42,14 +41,21 @@ class UIManager {
 
     initEventListeners() {
         if (this.btnBlue) {
-            this.btnBlue.addEventListener('click', () => this.selectSpecies('blue'));
+            this.btnBlue.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.selectSpecies('blue');
+            });
         }
         if (this.btnMaroon) {
-            this.btnMaroon.addEventListener('click', () => this.selectSpecies('maroon'));
+            this.btnMaroon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.selectSpecies('maroon');
+            });
         }
 
         if (this.instructionsPill) {
-            this.instructionsPill.addEventListener('click', () => {
+            this.instructionsPill.addEventListener('click', (e) => {
+                e.stopPropagation();
                 this.instructionsPill.classList.toggle('collapsed');
             });
         }
@@ -74,13 +80,6 @@ class UIManager {
         this.root.style.setProperty('--theme-glow', spec.accentGlow);
         this.root.style.setProperty('--theme-border', spec.themeBorder);
         this.root.style.setProperty('--theme-bg-tint', spec.themeBg);
-    }
-
-    setLoadingComplete() {
-        if (this.loadingOverlay) {
-            this.loadingOverlay.classList.add('hidden');
-        }
-        this.setStatus('Tracking Ready', 'ready');
     }
 
     setStatus(text, state = 'active') {

@@ -79,14 +79,6 @@ class InteractiveLilyApp {
         // Bound rAF callback instance (0 closure allocations/frame)
         this.boundRenderLoop = (ts) => this.renderLoop(ts);
 
-        // Loading screen 3-second minimum duration enforcement
-        this.cameraReady = false;
-        this.minLoadingElapsed = false;
-        setTimeout(() => {
-            this.minLoadingElapsed = true;
-            this.checkDismissLoading();
-        }, 3000);
-
         // UI Manager
         this.ui = new UIManager({
             onSpeciesChange: (key) => {
@@ -102,10 +94,7 @@ class InteractiveLilyApp {
         // Gesture Tracker (MediaPipe). Targets are pulled every frame via
         // getTargets(); the callback only keeps the status badge responsive.
         this.gestureTracker = new GestureTracker(this.video, {
-            onTrackingReady: () => {
-                this.cameraReady = true;
-                this.checkDismissLoading();
-            },
+            onTrackingReady: () => {},
             onTargetsUpdate: (data) => {
                 this.syncTrackingStatus(data.handsCount);
             }
@@ -113,12 +102,6 @@ class InteractiveLilyApp {
 
         // Start render loop
         requestAnimationFrame(this.boundRenderLoop);
-    }
-
-    checkDismissLoading() {
-        if (this.cameraReady && this.minLoadingElapsed) {
-            this.ui.setLoadingComplete();
-        }
     }
 
     syncTrackingStatus(handsCount) {

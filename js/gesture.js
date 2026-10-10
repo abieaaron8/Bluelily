@@ -264,6 +264,11 @@ class GestureTracker {
             // Real hands always win over the mouse
             if (this.slots.left.isActive(now) || this.slots.right.isActive(now)) return;
 
+            // Ignore pointer movement over UI elements
+            if (e.target && e.target.closest && e.target.closest('.app-header, .species-selector, .instructions-pill')) {
+                return;
+            }
+
             const P = this.pointer;
             const normX = e.clientX / window.innerWidth;
 
@@ -278,11 +283,6 @@ class GestureTracker {
             P.lastT = now;
             P.lastMove = now;
             P.lastInteraction = now;
-
-            if (e.buttons === 1) { // Left click drag
-                P.bloom = MathUtils.clamp(1 - e.clientY / window.innerHeight, 0, 1);
-                P.growth = MathUtils.clamp(normX, 0.1, 1);
-            }
 
             this.notifyUpdate();
         });
