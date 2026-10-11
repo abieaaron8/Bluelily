@@ -1,0 +1,9 @@
+{
+  "name": "flowers-01",
+  "version": "1.0.0",
+  "description": "Interactive Botanical Living Bouquet",
+  "scripts": {
+    "dev": "npx serve . -l 8080",
+    "start": "npx serve . -l 8080"
+  }
+}

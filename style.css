@@ -1,6 +1,6 @@
 /* =============================================================
    LILIUM GARDEN — Dreamy Botanical Bouquet
-   Personalized for Srujana Charis · Designed by Abie Aaron
+   Interactive Botanical Bouquet · Designed by Abie Aaron
    ============================================================= */
 
 :root {
@@ -305,176 +305,19 @@ html, body {
    ============================================================= */
 .creator-signature {
     position: absolute;
-    bottom: 26px;
-    right: 28px;
+    bottom: 20px;
+    right: 24px;
     z-index: 10;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    background: rgba(10, 16, 28, 0.45);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    padding: 6px 14px;
-    opacity: 0.65;
-    transition: opacity 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
-    pointer-events: auto;
-}
-
-.creator-signature:hover {
-    opacity: 0.95;
-    border-color: var(--theme-border);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 0 12px var(--theme-glow);
-}
-
-.signature-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--theme-accent);
-    box-shadow: 0 0 6px var(--theme-accent);
-}
-
-.signature-text {
     font-family: var(--font-sans);
     font-size: 11px;
     font-weight: 400;
     letter-spacing: 0.8px;
-    color: rgba(225, 235, 255, 0.85);
-}
-
-/* =============================================================
-   PERSONALIZED INTRO OVERLAY (Hiii, Srujana Charis)
-   ============================================================= */
-.loading-overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(ellipse at center, #091224 0%, #030611 60%, #010206 100%);
-    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.9s ease;
-}
-
-.loading-overlay.hidden {
-    opacity: 0;
-    visibility: hidden;
+    color: rgba(255, 255, 255, 0.35);
+    background: transparent;
+    border: none;
+    padding: 0;
     pointer-events: none;
-}
-
-.loading-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    max-width: 480px;
-    padding: 32px 24px;
-}
-
-.lily-loader-flower {
-    position: relative;
-    width: 96px;
-    height: 96px;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.loader-aura {
-    position: absolute;
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(75, 160, 255, 0.35) 0%, transparent 70%);
-    animation: aura-breathe 3s ease-in-out infinite;
-}
-
-.loader-ring {
-    position: absolute;
-    width: 74px;
-    height: 74px;
-    border-radius: 50%;
-    border: 1.5px dashed rgba(88, 166, 255, 0.6);
-    animation: loader-spin 10s linear infinite;
-    box-shadow: 0 0 24px var(--theme-glow);
-}
-
-.loader-center-sparkle {
-    width: 18px;
-    height: 18px;
-    background: #6ab4ff;
-    border-radius: 50%;
-    box-shadow: 0 0 20px #4ba0ff, 0 0 45px #ffffff;
-    animation: loader-pulse 2.2s ease-in-out infinite;
-}
-
-@keyframes loader-spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-@keyframes loader-pulse {
-    0%, 100% { transform: scale(0.88); opacity: 0.65; }
-    50% { transform: scale(1.2); opacity: 1; }
-}
-
-@keyframes aura-breathe {
-    0%, 100% { transform: scale(0.9); opacity: 0.4; }
-    50% { transform: scale(1.3); opacity: 0.8; }
-}
-
-.loading-greeting {
-    font-family: var(--font-script);
-    font-size: 28px;
-    font-weight: 500;
-    font-style: italic;
-    letter-spacing: 1px;
-    color: #ffffff;
-    margin-bottom: 10px;
-    text-shadow: 0 0 24px rgba(88, 166, 255, 0.6), 0 2px 10px rgba(0, 0, 0, 0.6);
-}
-
-.loading-sub {
-    font-size: 13px;
-    font-weight: 300;
-    color: rgba(215, 230, 255, 0.8);
-    letter-spacing: 0.5px;
-    margin-bottom: 24px;
-    line-height: 1.6;
-}
-
-.loading-bar {
-    width: 200px;
-    height: 2.5px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 3px;
-    overflow: hidden;
-    margin-bottom: 16px;
-}
-
-.loading-bar-inner {
-    width: 40%;
-    height: 100%;
-    background: linear-gradient(90deg, #388bfd, #8bc2ff);
-    box-shadow: 0 0 10px #4ba0ff;
-    border-radius: 3px;
-    animation: loading-slide 1.8s ease-in-out infinite alternate;
-}
-
-@keyframes loading-slide {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(200%); }
-}
-
-.loading-hint {
-    font-size: 11px;
-    font-weight: 300;
-    color: rgba(200, 220, 255, 0.4);
-    letter-spacing: 0.3px;
+    user-select: none;
 }
 
 /* =============================================================

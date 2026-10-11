@@ -1,8 +1,27 @@
 /* =============================================================
-   APPLICATION ORCHESTRATOR
-   Integrates GestureTracker, FaceDetection, LilyRenderer,
-   ParticleSystem, CelebrationManager, and UIManager.
+   APPLICATION ORCHESTRATOR (Phase 4 Zero-GC & State-Batched)
+   Integrates GestureTracker, LilyRenderer, ParticleSystem,
+   CelebrationManager, and UIManager.
+
+   Motion foundation:
+   - Real-time delta (seconds) drives everything: identical speed on
+     60 / 120 / 144 Hz displays.
+   - Bloom, growth and wind are exact damped springs, not lerps.
+   - Canvas backing store is devicePixelRatio aware (logical CSS-pixel
+     coordinates are preserved for every other module).
    ============================================================= */
+
+// Spring tuning: omega = responsiveness (rad/s), zeta = damping ratio.
+// zeta = 1 is critically damped: fastest approach with zero overshoot.
+const MOTION_CONFIG = Object.freeze({
+    bloom: { omega: 7.5, zeta: 1.0 },   // petals: light, quick, no bounce
+    growth: { omega: 4.5, zeta: 1.0 },   // stem: heavier, slower to commit
+    wind: { omega: 5.5, zeta: 0.62 },   // air is a pendulum: sways past, then settles
+    maxDt: 0.05,                          // clamp after tab switches / hitches
+    maxDpr: 2,                            // cap backing-store cost on 3x phones
+    pollenRate: 45,                       // pollen puffs / second while flower is active
+    pollenActivitySpeed: 0.48             // bloom units / second that counts as activity
+});
 
 class InteractiveLilyApp {
     constructor() {
@@ -10,15 +29,30 @@ class InteractiveLilyApp {
         this.ctx = this.canvas.getContext('2d');
         this.video = document.getElementById('webcam');
 
+        // Logical (CSS pixel) viewport + pixel ratio
+        this.dpr = 1;
+        this.viewW = window.innerWidth;
+        this.viewH = window.innerHeight;
+        this.needsResize = true;
+
         // Core systems
         this.noise = new OrganicNoise();
-        this.particles = new ParticleSystem(window.innerWidth, window.innerHeight);
+        this.particles = new ParticleSystem(this.viewW, this.viewH);
         this.lily = new LilyRenderer();
         this.celebration = new CelebrationManager();
 
-        // State variables (smoothed for organic visual feel)
-        this.bloom = 0;
-        this.growth = 0.28;
+        // Springs (initial values preserve the original opening feel)
+        this.springs = {
+            bloom: new Spring(0, MOTION_CONFIG.bloom),
+            growth: new Spring(0.28, MOTION_CONFIG.growth),
+            wind: new Spring(0, MOTION_CONFIG.wind)
+        };
+        this.springs.bloom.setTarget(0.15);
+        this.springs.growth.setTarget(0.45);
+
+        // Visible, spring-driven state (read by renderer & celebration logic)
+        this.bloom = this.springs.bloom.value;
+        this.growth = this.springs.growth.value;
         this.windForce = 0;
 
         // Detection targets from gestures
@@ -26,19 +60,24 @@ class InteractiveLilyApp {
         this.targetGrowth = 0.45;
         this.targetWind = 0;
 
-        // Time tracking
+        // Time tracking (seconds)
         this.time = 0;
         this.lastTimestamp = 0;
         this.lastBloomForSparkle = 0;
+        this.pollenBudget = 0;
         this.celebrationSustainTimer = 0;
+        this.lastHandsCount = -1;
 
-        // Loading screen 3-second minimum duration enforcement
-        this.cameraReady = false;
-        this.minLoadingElapsed = false;
-        setTimeout(() => {
-            this.minLoadingElapsed = true;
-            this.checkDismissLoading();
-        }, 3000);
+        // Pre-allocated render state payload (0 B/frame allocation)
+        this.renderState = {
+            bloom: 0,
+            growth: 0,
+            windForce: 0,
+            time: 0
+        };
+
+        // Bound rAF callback instance (0 closure allocations/frame)
+        this.boundRenderLoop = (ts) => this.renderLoop(ts);
 
         // UI Manager
         this.ui = new UIManager({
@@ -47,120 +86,168 @@ class InteractiveLilyApp {
             }
         });
 
-        // Resize handler
+        // Resize + DPR change handling (applied once per frame, not per event)
+        window.addEventListener('resize', () => { this.needsResize = true; });
+        this.watchDevicePixelRatio();
         this.resize();
-        window.addEventListener('resize', () => this.resize());
 
-        // Gesture & Face Tracker (MediaPipe)
+        // Gesture Tracker (MediaPipe). Targets are pulled every frame via
+        // getTargets(); the callback only keeps the status badge responsive.
         this.gestureTracker = new GestureTracker(this.video, {
-            onTrackingReady: () => {
-                this.cameraReady = true;
-                this.checkDismissLoading();
-            },
+            onTrackingReady: () => {},
             onTargetsUpdate: (data) => {
-                this.targetBloom = data.targetBloom;
-                this.targetGrowth = Math.max(0.1, data.targetGrowth);
-                this.targetWind = data.targetWind;
-                this.ui.updateTrackingStatus(data.handsCount);
+                this.syncTrackingStatus(data.handsCount);
             }
         });
 
         // Start render loop
-        requestAnimationFrame((ts) => this.renderLoop(ts));
+        requestAnimationFrame(this.boundRenderLoop);
     }
 
-    checkDismissLoading() {
-        if (this.cameraReady && this.minLoadingElapsed) {
-            this.ui.setLoadingComplete();
-        }
+    syncTrackingStatus(handsCount) {
+        if (handsCount === this.lastHandsCount) return;
+        this.lastHandsCount = handsCount;
+        this.ui.updateTrackingStatus(handsCount);
+    }
+
+    /** Re-arms a one-shot media query so zoom / monitor moves update DPR. */
+    watchDevicePixelRatio() {
+        if (!window.matchMedia) return;
+        const mq = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
+        const onChange = () => {
+            this.needsResize = true;
+            this.watchDevicePixelRatio();
+        };
+        if (mq.addEventListener) mq.addEventListener('change', onChange, { once: true });
+        else if (mq.addListener) mq.addListener(onChange);
     }
 
     resize() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
-        this.particles.resize(this.canvas.width, this.canvas.height);
+        this.needsResize = false;
+        this.dpr = Math.min(window.devicePixelRatio || 1, MOTION_CONFIG.maxDpr);
+        this.viewW = window.innerWidth;
+        this.viewH = window.innerHeight;
+
+        const pw = Math.round(this.viewW * this.dpr);
+        const ph = Math.round(this.viewH * this.dpr);
+        if (this.canvas.width !== pw) this.canvas.width = pw;
+        if (this.canvas.height !== ph) this.canvas.height = ph;
+
+        // Every other module keeps working in logical CSS pixels
+        this.particles.resize(this.viewW, this.viewH);
     }
 
     renderLoop(timestamp) {
-        const dt = this.lastTimestamp ? Math.min(2.0, (timestamp - this.lastTimestamp) / 16.67) : 1;
+        if (this.needsResize) this.resize();
+
+        // --- 0. Real elapsed time in seconds, independent of refresh rate ---
+        let dtSec = this.lastTimestamp ? (timestamp - this.lastTimestamp) / 1000 : 1 / 60;
         this.lastTimestamp = timestamp;
-        this.time += 0.016 * dt;
+        dtSec = MathUtils.clamp(dtSec, 0, MOTION_CONFIG.maxDt);
+        this.time += dtSec;
 
+        const dtFrames = dtSec * 60;
         const ctx = this.ctx;
-        const cw = this.canvas.width;
-        const ch = this.canvas.height;
+        const cw = this.viewW;
+        const ch = this.viewH;
 
-        // --- 1. Smooth interpolation between gesture targets & visible state ---
-        const bloomLerp = 0.065 * dt;
-        const growthLerp = 0.045 * dt;
-        const windLerp = 0.075 * dt;
+        // --- 1. Pull gesture targets, then advance the springs ---
+        const t = this.gestureTracker.getTargets();
+        this.syncTrackingStatus(t.handsCount);
 
-        this.bloom += (this.targetBloom - this.bloom) * bloomLerp;
-        this.growth += (this.targetGrowth - this.growth) * growthLerp;
-        this.windForce += (this.targetWind - this.windForce) * windLerp;
+        this.targetBloom = t.bloom;
+        this.targetGrowth = Math.max(0.1, t.growth);
+        this.targetWind = t.wind;
+
+        const { bloom: sBloom, growth: sGrowth, wind: sWind } = this.springs;
+        sBloom.setTarget(this.targetBloom);
+        sGrowth.setTarget(this.targetGrowth);
+        sWind.setTarget(this.targetWind);
+
+        sBloom.update(dtSec);
+        sGrowth.update(dtSec);
+        sWind.update(dtSec);
+
+        this.bloom = MathUtils.clamp(sBloom.value, 0, 1);
+        this.growth = MathUtils.clamp(sGrowth.value, 0, 1);
+        this.windForce = sWind.value;
 
         // Ambient gentle atmospheric breeze
         const naturalBreeze = this.noise.get(this.time * 0.7, 1) * 0.14;
         const totalWind = naturalBreeze + this.windForce * 0.22;
 
         // --- 2. Check Celebration Trigger Threshold ---
-        // When main flower blooms from hand gesture input (~0.85+)
         if (this.bloom >= 0.84 && this.celebration.state === 'idle') {
-            this.celebrationSustainTimer += dt * 0.016;
+            this.celebrationSustainTimer += dtSec;
             if (this.celebrationSustainTimer > 0.35) {
                 this.celebration.trigger();
             }
         } else if (this.bloom < 0.70) {
             this.celebrationSustainTimer = 0;
-            // If user unpinches after viewing the name, allow resetting back to garden
             if (this.celebration.state === 'reveal' && this.celebration.timer > 10.0 && this.bloom < 0.25) {
                 this.celebration.reset();
             }
         }
 
-        // --- 3. Canvas Refresh ---
-        ctx.clearRect(0, 0, cw, ch);
+        // --- 3. Canvas Refresh & Transform Setup ---
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
 
-        // --- 4. Interactive Hand Overlays (Subtle Stardust at fingertips) ---
+        // --- 4. Interactive Hand Overlays ---
         this.gestureTracker.drawHandOverlays(ctx, cw, ch, this.lily.currentSpecies);
 
-        // --- 5. Botanical Lily Bouquet Rendering (Stems disappear completely during sequence) ---
+        // --- 5. Botanical Lily Bouquet Rendering (Zero-GC state reuse) ---
         let flowerTip = null;
-        if (this.celebration.stemsAlpha > 0.005) {
-            ctx.save();
-            ctx.globalAlpha = this.celebration.stemsAlpha;
-            // During 'expand' phase, scale flower dramatically into full-screen bloom
+        const stemsAlpha = this.celebration.stemsAlpha;
+        if (stemsAlpha > 0.005) {
             const activeGrowth = this.celebration.state === 'expand'
                 ? this.growth * this.celebration.expansionScale
                 : this.growth;
 
-            flowerTip = this.lily.render(ctx, cw, ch, {
-                bloom: this.bloom,
-                growth: activeGrowth,
-                windForce: totalWind,
-                time: this.time
-            });
-            ctx.restore();
-        }
+            // Reuse persistent renderState object
+            const state = this.renderState;
+            state.bloom = this.bloom;
+            state.growth = activeGrowth;
+            state.windForce = totalWind;
+            state.time = this.time;
 
-        // --- 6. Pollen Sparkle Emission from Anthers (when flower is visible) ---
-        if (flowerTip && this.celebration.stemsAlpha > 0.5 && this.bloom > 0.2) {
-            const bloomDelta = Math.abs(this.bloom - this.lastBloomForSparkle);
-            if (bloomDelta > 0.008 || Math.abs(totalWind) > 0.25) {
-                this.particles.emitPollen(flowerTip, 1);
+            if (stemsAlpha < 0.999) {
+                ctx.globalAlpha = stemsAlpha;
+                flowerTip = this.lily.render(ctx, cw, ch, state);
+                ctx.globalAlpha = 1.0;
+            } else {
+                flowerTip = this.lily.render(ctx, cw, ch, state);
             }
         }
+
+        // --- 6. Pollen Sparkle Emission from Anthers ---
+        const bloomSpeed = dtSec > 1e-4
+            ? Math.abs(this.bloom - this.lastBloomForSparkle) / dtSec
+            : 0;
         this.lastBloomForSparkle = this.bloom;
 
-        // --- 8. Background Drifting Ambient Particles ---
-        this.particles.update(totalWind, dt);
+        if (flowerTip && stemsAlpha > 0.5 && this.bloom > 0.2) {
+            if (bloomSpeed > MOTION_CONFIG.pollenActivitySpeed || Math.abs(totalWind) > 0.25) {
+                this.pollenBudget += MOTION_CONFIG.pollenRate * dtSec;
+            }
+            const puffs = Math.floor(this.pollenBudget);
+            if (puffs > 0) {
+                this.particles.emitPollen(flowerTip, puffs);
+                this.pollenBudget -= puffs;
+            }
+        }
+        this.pollenBudget = Math.min(this.pollenBudget, 4);
+
+        // --- 7. Background Drifting Ambient Particles ---
+        this.particles.update(totalWind, dtFrames);
         this.particles.draw(ctx, this.lily.currentSpecies);
 
-        // --- 9. Floral Celebration Sequence (Pure Petals & Name Assembly) ---
-        this.celebration.update(dt, totalWind, this.time);
+        // --- 8. Floral Celebration Sequence ---
+        this.celebration.update(dtFrames, totalWind, this.time);
         this.celebration.draw(ctx, this.lily.currentSpecies, this.gestureTracker.smoothedFaceBox);
 
-        requestAnimationFrame((ts) => this.renderLoop(ts));
+        requestAnimationFrame(this.boundRenderLoop);
     }
 }
 
