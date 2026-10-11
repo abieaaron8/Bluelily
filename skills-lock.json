@@ -1,0 +1,215 @@
+{
+  "version": 1,
+  "skills": {
+    "autoresearch": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/autoresearch/SKILL.md",
+      "computedHash": "48e1f2db654ac0a42bafc992c0913a2f9f06b1499918f21883bdab19b5e4ce91"
+    },
+    "ax": {
+      "source": "flowcopilot/skills",
+      "sourceType": "github",
+      "skillPath": "skills/ax/SKILL.md",
+      "computedHash": "1286819638d2696ed11a734563346d3e0b2e7746c6cf7b6963ef474fa049a6ef"
+    },
+    "browser-harness": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/browser-harness/SKILL.md",
+      "computedHash": "b48fd81d13ba4cfb78e819e80197573c91bcbc2d211133a87304a8601470ffd8"
+    },
+    "clarity": {
+      "source": "flowcopilot/skills",
+      "sourceType": "github",
+      "skillPath": "skills/clarity/SKILL.md",
+      "computedHash": "c112c70c5c988c85fb99922c0d9cf99e1b1aa34f945bab77cb56be3ec62d82fd"
+    },
+    "clerk": {
+      "source": "flowcopilot/skills",
+      "sourceType": "github",
+      "skillPath": "skills/clerk/SKILL.md",
+      "computedHash": "7d7ac75f10c35e9f5eaab274235320e8504dd936c66c8dbcce1410a2504adaa4"
+    },
+    "cloudflare": {
+      "source": "flowcopilot/skills",
+      "sourceType": "github",
+      "skillPath": "skills/cloudflare/SKILL.md",
+      "computedHash": "102aa7cf3ad158f4cb26a58855e3bdb971799b7c7ddb65f24bba6f35688323c0"
+    },
+    "codeburn": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/codeburn/SKILL.md",
+      "computedHash": "4ac5efb8448061966e0124540438e179a6fe0c395c6a48b1b4cebb97f8388591"
+    },
+    "codex-review": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/codex-review/SKILL.md",
+      "computedHash": "c44d86ba967ab18349c22bc21b6001fd4c60ef9951a2632de8e39bc337eedab2"
+    },
+    "compact-memory": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/compact-memory/SKILL.md",
+      "computedHash": "a79a84423422358d3427922de64af575939f2d44c28aafef097c91032cb62408"
+    },
+    "convex": {
+      "source": "flowcopilot/skills",
+      "sourceType": "github",
+      "skillPath": "skills/convex/SKILL.md",
+      "computedHash": "373352e34bf6516d96f6aef684fca7656d896510b1524143610387f830ca9157"
+    },
+    "delegate-task": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/delegate-task/SKILL.md",
+      "computedHash": "8c7f7081c1ce88503761acaff448fa2a366c65fbf6af06209db16518743df72e"
+    },
+    "design-engineering": {
+      "source": "flowcopilot/skills",
+      "sourceType": "github",
+      "skillPath": "skills/design-engineering/SKILL.md",
+      "computedHash": "330ff4707a49c6cdfe620c98115a21f8885a574aa721237eab360c5ae045875e"
+    },
+    "design-md": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/design-md/SKILL.md",
+      "computedHash": "4e941825d53edda4608031b6c628a81708f74f18f7b2d0a7834b2f3a0513b41b"
+    },
+    "expo": {
+      "source": "flowcopilot/skills",
+      "sourceType": "github",
+      "skillPath": "skills/expo/SKILL.md",
+      "computedHash": "6ca5a53aa89cca722f75a2ceffd48f452f6528eb338b9ad3e439fead1941f2cb"
+    },
+    "extract-design": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/extract-design/SKILL.md",
+      "computedHash": "0d502c1fa0c02bba6795b2f433fec0b21aac8625d6d27a19fa054936dfb9c189"
+    },
+    "feature-orchestrator": {
+      "source": "ski043/skills",
+      "sourceType": "github",
+      "skillPath": "skills/feature-orchestrator/SKILL.md",
+      "computedHash": "9bab9d6a484f193cb1bd2944d9e85b00c37fc2f0107f873f31b9e0fc52a776d4"
+    },
+    "find-skills": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/find-skills/SKILL.md",
+      "computedHash": "e212a35cd68ab4f620e6a6178e1f365beed1f1281f2157087881a68e7315fa4a"
+    },
+    "firecrawl": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/firecrawl/SKILL.md",
+      "computedHash": "81b1b54e7985ea14c104613f11be4b120e657cd7b519e67ea146ab06015de402"
+    },
+    "generate": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/generate/SKILL.md",
+      "computedHash": "06dcc5fece11b8665b51adfdd4394ecd749418237b05cef9db3b71f7535eec3f"
+    },
+    "grill-me-codex": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/grill-me-codex/SKILL.md",
+      "computedHash": "61fd3c0bc8a9cd39cc54b14c324e77e51ef61755ef86e9efa3411786672880ae"
+    },
+    "grill-with-docs-codex": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/grill-with-docs-codex/SKILL.md",
+      "computedHash": "e71b2052e6ed1e5c6da41417e6550489a4e04d07f29992c976ed1266098c88e8"
+    },
+    "lightrag": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/lightrag/SKILL.md",
+      "computedHash": "8e00a81293db5443321543a8571c0fd253ba61f2df8e466d218b88cc9ea3ebcc"
+    },
+    "notebooklm": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/notebooklm/SKILL.md",
+      "computedHash": "e4bbb97dda3586b7bc077af2a9a2e20b4b2ac9a940774b3bab5e42db14b48928"
+    },
+    "openspace": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/openspace/SKILL.md",
+      "computedHash": "2a2c3811d3829924baf03453564d72d9abe01cd6611192943a8cea09077132be"
+    },
+    "playwright": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/playwright/SKILL.md",
+      "computedHash": "a78f7e5f83df44a71e9d63b08fbf3b08c97e0930abb936168ab7a4827762e15f"
+    },
+    "react-native": {
+      "source": "flowcopilot/skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-native/SKILL.md",
+      "computedHash": "a99d1bcd3aba9b191bf9846b32f345d4325ace7cabf41b197451fe4b810c574c"
+    },
+    "roast": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/roast/SKILL.md",
+      "computedHash": "a57ad7894fe74401ddb3177f6c8524c45bf6bbb6304e103d40e0759a49671da1"
+    },
+    "session-handoff": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/session-handoff/SKILL.md",
+      "computedHash": "24c3fbae4b9c6b540cdfe89c63026e47d2c863bcf347e76239e4879edbc4bb34"
+    },
+    "site-teardown": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/site-teardown/SKILL.md",
+      "computedHash": "81dab0ae3a3a7b318923ee569b78fe7db3948e7480af8973a1fb0d5bfc5095d9"
+    },
+    "skill-discovery": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/skill-discovery/SKILL.md",
+      "computedHash": "f08a3acf6ee1f74c59dca1ca8dba309a0c90a717eb64c614dc0a7ea2246736d9"
+    },
+    "skillui": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/skillui/SKILL.md",
+      "computedHash": "ec227af05da164042404596fbe91b141af6c5c1a7e5e69c3eb9efd8ca38139ed"
+    },
+    "spline-3d": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/spline-3d/SKILL.md",
+      "computedHash": "13ab5368ff802a1f6388ef934b00799b4e05740f996924ade26040f197f0bf48"
+    },
+    "taste-skill": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/taste-skill/SKILL.md",
+      "computedHash": "5521f7551cc145359bd0e3f8a2f7f6a8f3c8958e36c3b314837874d515c1c82a"
+    },
+    "three-brain": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/three-brain/SKILL.md",
+      "computedHash": "073616c6e74e3145ac780efdec0b1d6de5c2844444d74ed749403f7c7327e9d0"
+    },
+    "webgpu-threejs-tsl": {
+      "source": "roentek/claude_code_boilerplate_framework",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/webgpu-threejs-tsl/SKILL.md",
+      "computedHash": "1d156273ecc0f9e89cdb643f44704fa3fb9837968e0c34c2a6cba102424ec90b"
+    }
+  }
+}
